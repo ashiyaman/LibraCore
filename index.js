@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const cors = require("cors");
 const express = require('express')
 require('dotenv').config()
 const Books = require('./model/books.models.js')
@@ -8,6 +9,7 @@ const PORT = process.env.PORT
 
 initializeDatabase()
 const app = express()
+app.use(cors());
 app.use(express.json())
 
 app.get('/', (req, res) => {
