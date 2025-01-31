@@ -1,8 +1,11 @@
 const mongoose = require('mongoose')
 const express = require('express')
+require('dotenv').config()
 
-const PORT = process.env.PORT || 3000
+const {initializeDatabase} = require('./db/db.connect.js')
+const PORT = process.env.PORT 
 
+initializeDatabase()
 const app = express()
 app.use(express.json())
 
