@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to Book App Server.')
 })
 
-// Add new book to db
+// Api to add new book to db
 
 const createBook = async(newBook) => {
     try{
@@ -36,6 +36,34 @@ app.post('/books', async (req, res) => {
     }
     catch(error){
         res.status(500).json({error: 'Failed to add New Book.'})
+    }
+})
+
+//Api to get all books from db
+
+const getAllBooks = async() => {
+    try{
+        const books = Books.find()
+        return books
+    }
+    catch(error){
+        throw error
+    }
+}
+
+app.get('/books', async (req, res) => {
+    try{
+        const books = await getAllBooks()
+        if(books){
+            res.send(books)
+        }
+        else{
+            res.status(404).json({error: 'Books not found.'})
+        }
+    }
+    catch(error){
+        console.log(error)
+        res.status(500).json({error: 'Error while fetching books from database.'})
     }
 })
 
