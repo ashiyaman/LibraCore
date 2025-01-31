@@ -233,6 +233,33 @@ app.post('/books/title/:bookTitle', async (req, res) => {
     }
 })
 
+//Delete book from db
+
+const deleteBook = async(bookId) => {
+    try{
+        const deletedBook =await Books.findByIdAndDelete(bookId)
+        return deletedBook
+    }
+    catch(error){
+        throw error
+    }
+}
+
+app.delete('/books/:bookId', async (req, res) => {
+    try{
+        const deletedBook = await deleteBook(req.params.bookId)
+        if(deletedBook){
+            res.status(200).json({message: 'Book deleted successfully', book: deletedBook})
+        }
+        else{
+            res.status(404).json({error: 'Book not found.'})
+        }
+    }
+    catch{
+        res.status(500).json({error: 'Error while deleting book.'})
+    }
+})
+
 app.listen(PORT, () => {
     console.log('Server is running on port', PORT)
 })
