@@ -148,6 +148,33 @@ app.get('/books/genre/:genreName', async (req, res) => {
     }
 })
 
+//Get book by its year
+
+const readBookByYear = async(year) => {
+    try{
+        const book = await Books.find({publishedYear: year})
+        return book
+    }
+    catch(error){
+        throw error
+    }
+}
+
+app.get('/books/year/:publishedYear', async (req, res) => {
+    try{
+        const book = await readBookByYear(req.params.publishedYear)
+        if(book){
+            res.send(book)
+        }
+        else{
+            res.status(404).json({error: 'No Books found.'})
+        }
+    }
+    catch{
+        res.status(500).json({error: 'Error while fetching books.'})
+    }
+})
+
 app.listen(PORT, () => {
     console.log('Server is running on port', PORT)
 })
