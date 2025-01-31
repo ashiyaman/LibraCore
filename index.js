@@ -175,6 +175,64 @@ app.get('/books/year/:publishedYear', async (req, res) => {
     }
 })
 
+//Find a book by id and update its data
+
+const updateBook = async(bookId, dataToUpdate) => {
+    try{
+        const book = await Books.findByIdAndUpdate(bookId, dataToUpdate, {new: true})
+        return book
+    }
+    catch(error){
+        console.log(error)
+        throw error
+    }
+}
+
+app.post('/books/:bookId', async (req, res) => {
+    try{
+        const updatedBook = await updateBook(req.params.bookId, req.body)
+        console.log(updatedBook)
+        if(updatedBook){
+            res.status(200).json({message: 'Book updated successfully', book: updatedBook})
+        }
+        else{
+            res.status(404).json({error: 'Book does not exist.'})
+        }
+    }
+    catch{
+        res.status(500).json({error: 'Error while updating book.',})
+    }
+})
+
+//Update book by its title
+
+const updateBookByTitle = async(bookTitle, dataToUpdate) => {
+    try{
+        const bookToUpdate = await readBookByTitle(bookTitle)
+        const book = await Books.findOneAndUpdate(bookToUpdate.id, dataToUpdate, {new: true})
+        return book
+    }
+    catch(error){
+        console.log(error)
+        throw error
+    }
+}
+
+app.post('/books/title/:bookTitle', async (req, res) => {
+    try{
+        const updatedBook = await updateBookByTitle(req.params.bookTitle, req.body)
+        if(updatedBook){
+            res.status(200).json({message: 'Book updated successfully', book: updatedBook})
+        }
+        else{
+            res.status(404).json({error: 'Book does not exist.'})
+        }
+    }
+    catch{
+        res.status(500).json({error: 'Error while updating book.',})
+    }
+})
+
 app.listen(PORT, () => {
     console.log('Server is running on port', PORT)
 })
